@@ -101,25 +101,23 @@ const Nav = () => {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="hidden shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-foreground transition hover:bg-accent md:flex"
+                onClick={() => openAuth("login")}
+                className="flex shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 text-foreground transition hover:bg-accent"
               >
-                <Avatar size="sm">
-                  <AvatarImage src={user.avatar || undefined} alt={user.name} />
-                  <AvatarFallback>{userInitial}</AvatarFallback>
-                </Avatar>
-                <span className="leading-tight">
-                  <span className="block text-[12px] font-medium">
-                    Welcome back
-                  </span>
-                  <span className="block max-w-28 truncate text-sm font-bold">
-                    {user.name}
+                <UserRound className="size-7 stroke-[2.3]" />
+                <span className="hidden text-left leading-tight md:block">
+                  <span className="block text-[12px] font-medium">Welcome</span>
+                  <span className="block text-sm font-bold">
+                    Sign in / Register
                   </span>
                 </span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-59 py-4">
               <DropdownMenuLabel>
-                <span className="block truncate text-foreground">{user.name}</span>
+                <span className="block truncate text-foreground">
+                  {user.name}
+                </span>
                 <span className="block truncate font-normal">{user.email}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
