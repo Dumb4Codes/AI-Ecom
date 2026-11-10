@@ -1,17 +1,40 @@
 import Banner from "@/components/banner";
-import CartSheet from "@/components/cart-sheet";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import { AuthDialog } from "@/components/auth-dialog";
 import { Outlet } from "react-router-dom";
-import { Suspense, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import RouteFallback from "@/components/route-fallback";
 import { useUser } from "@/hooks/use-user";
 import { useCart } from "@/hooks/use-cart";
+import { useAuth } from "@/hooks/use-auth";
+
+// The cart drawer and auth dialog are only needed once the user opens them,
+// so keep them (and their Radix dependencies) out of the first-load bundle.
+const CartSheet = lazy(() => import("@/components/cart-sheet"));
+const AuthDialog = lazy(() =>
+  import("@/components/auth-dialog").then((m) => ({ default: m.AuthDialog })),
+);
+
+/** Mounts `children` the first time `open` becomes true, then keeps them mounted
+ *  so close animations and internal state keep working. */
+const MountOnFirstOpen = ({
+  open,
+  children,
+}: {
+  open: boolean;
+  children: React.ReactNode;
+}) => {
+  const [hasOpened, setHasOpened] = useState(open);
+  // Adjusting state during render is the documented pattern for derived flags.
+  if (open && !hasOpened) setHasOpened(true);
+  return hasOpened ? <Suspense fallback={null}>{children}</Suspense> : null;
+};
 
 const AppLayout = () => {
   const { data: user } = useUser();
   const fetchCart = useCart((state) => state.fetchCart);
+  const isCartOpen = useCart((state) => state.isCartOpen);
+  const isAuthOpen = useAuth((state) => state.isAuthOpen);
 
   useEffect(() => {
     if (user) {
@@ -29,8 +52,12 @@ const AppLayout = () => {
         </Suspense>
       </main>
       <Footer />
-      <CartSheet />
-      <AuthDialog />
+      <MountOnFirstOpen open={isCartOpen}>
+        <CartSheet />
+      </MountOnFirstOpen>
+      <MountOnFirstOpen open={isAuthOpen}>
+        <AuthDialog />
+      </MountOnFirstOpen>
     </div>
   );
 };
