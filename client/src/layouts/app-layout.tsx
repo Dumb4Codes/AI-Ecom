@@ -47,7 +47,8 @@ const AppLayout = () => {
       <Banner />
       <Nav />
       <main className="min-h-0 w-full max-width mx-auto px-4 min-[1272px]:px-0 flex-1">
-        <Suspense fallback={<RouteFallback />}>
+        {/* Tall fallback keeps the footer below the fold so it cannot jump (CLS) when the page replaces it. */}
+        <Suspense fallback={<RouteFallback className="min-h-[100svh] items-start pt-32" />}>
           <Outlet />
         </Suspense>
       </main>
