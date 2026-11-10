@@ -55,6 +55,8 @@ npm install
 cp .env.example .env
 # fill in the values in .env — see table below
 npm run seed:categories   # optional: seeds initial categories
+# optional: create/promote a demo admin so you can open the admin dashboard
+DEMO_ADMIN_EMAIL=admin@example.com DEMO_ADMIN_PASSWORD='choose-a-password' npm run seed:demo-admin
 npm run dev
 ```
 
@@ -108,6 +110,14 @@ See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for full step-by-step deployment instruct
 
 ## 🧪 Testing
 
-`backend/src/tests/` contains integration test files (auth, cart, products, orders, reviews, admin, etc.) written as plain TypeScript using `fetch` against a running server — likely originally generated with an AI testing tool. They now point at `http://localhost:8000/api` by default (previously hardcoded to the original author's own deployed URL, which has been fixed).
+```bash
+cd backend && npm test        # Vitest + Supertest on an in-memory MongoDB (no external services)
+cd client  && npm test        # Vitest unit tests
+cd client  && npm run lint && npm run build
+```
 
-**Note:** there's currently no test runner wired up (no Jest/Vitest installed, no `test` script in `package.json`), so these files can't be run with a single command yet. To make them runnable, you'd add a test runner and a script — ask me if you'd like this set up.
+Backend tests live in `backend/src/__tests__/` and cover auth, authorization (401/403), product search (including regex-injection safety), checkout/stock rules and Stripe-webhook idempotency. Stripe is mocked; MongoDB runs in memory via `mongodb-memory-server` (the first run downloads a mongod binary).
+
+> The older files in `backend/src/tests/` are manual smoke scripts that call a **deployed** URL with `fetch`. They are not part of `npm test`.
+
+CI (`.github/workflows/ci.yml`) runs typecheck, lint, tests and the production build on every push and pull request.

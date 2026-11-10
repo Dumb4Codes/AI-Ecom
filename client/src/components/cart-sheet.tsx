@@ -92,7 +92,7 @@ const CartSheet = () => {
                     key={item.productId}
                     className="grid grid-cols-[88px_1fr] gap-4 px-5 py-3"
                   >
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={item.imageUrl}
                       alt={item.name}
                       className="size-20 object-contain"
@@ -138,6 +138,7 @@ const CartSheet = () => {
                                     item.quantity - 1,
                                   )
                             }
+                          aria-label={item.quantity === 1 ? "Remove item" : "Decrease quantity"}
                           >
                             {item.quantity === 1 ? <Trash2 /> : <Minus />}
                           </Button>
@@ -151,6 +152,7 @@ const CartSheet = () => {
                             onClick={() =>
                               updateQuantity(item.productId, item.quantity + 1)
                             }
+                          aria-label={"Increase quantity"}
                           >
                             <Plus />
                           </Button>

@@ -51,6 +51,10 @@ const cartSchema = new Schema<ICart>(
   }
 );
 
+// Indexes for the hot query paths
+cartItemSchema.index({ userId: 1 });
+cartItemSchema.index({ guestCartId: 1 });
+
 const CartModel = mongoose.model<ICart>("Cart", cartSchema);
 
 export default CartModel;

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import type { OrderStatus } from "@/constants/orders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Empty,
@@ -152,7 +153,7 @@ const OrderTrackingPage = () => {
             Placed on {formatDate(order.createdAt)}
           </p>
         </div>
-        <OrderStatusBadge status={order.status as any} />
+        <OrderStatusBadge status={order.status as OrderStatus} />
       </div>
 
       {/* Horizontal Stepper */}
@@ -232,7 +233,7 @@ const OrderTrackingPage = () => {
                   key={item.productId}
                   className="grid grid-cols-[48px_1fr_auto] items-center gap-4 py-2 first:pt-0 last:pb-0"
                 >
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={item.image}
                     alt={item.name}
                     className="size-12 rounded-lg object-contain border border-border"

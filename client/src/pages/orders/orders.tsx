@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import type { OrderStatus } from "@/constants/orders";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Empty,
@@ -89,7 +90,7 @@ const OrdersPage = () => {
                           key={idx}
                           className="grid size-14 place-items-center rounded-xl border border-border bg-background"
                         >
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={item.image}
                             alt={item.name}
                             className="size-10 object-contain"
@@ -103,7 +104,7 @@ const OrdersPage = () => {
                         <h2 className="text-base font-semibold text-foreground">
                           Order #{order.orderNo}
                         </h2>
-                        <OrderStatusBadge status={order.status as any} />
+                        <OrderStatusBadge status={order.status as OrderStatus} />
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
                         Placed on {formatDate(order.createdAt)}

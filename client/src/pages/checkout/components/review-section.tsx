@@ -56,7 +56,7 @@ const ReviewSection = ({
               key={item.productId}
               className="grid grid-cols-[64px_1fr_auto] items-center gap-4"
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={item.imageUrl}
                 alt={item.name}
                 className="size-14 object-contain"

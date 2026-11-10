@@ -36,6 +36,7 @@ export type ReviewableOrderItemType = {
 
 export type ReviewableOrderType = {
   _id: string; // Order ID
+  orderNo: string;
   createdAt: string;
   items: ReviewableOrderItemType[];
 };

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { getErrorMessage } from "@/lib/errors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -59,8 +60,8 @@ export default function AdminProductsPage() {
       toast.success("Product deleted successfully");
       setProductToDelete(null);
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "Failed to delete product");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to delete product"));
     },
   });
 
@@ -153,14 +154,14 @@ export default function AdminProductsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  products.map((product: any) => (
+                  products.map((product) => (
                     <TableRow key={product._id} className="hover:bg-muted/30 text-[13px]!">
                       <TableCell className="px-4 py-2">
                         <Link
                           to={PUBLIC_ROUTES.PRODUCT_DETAIL.replace(":slug", product.slug)}
                           className="flex items-center gap-3"
                         >
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={product.images?.[0] || "/placeholder.png"}
                             alt={product.name}
                             className="h-10 w-10 rounded-md object-cover border"
@@ -199,7 +200,7 @@ export default function AdminProductsPage() {
                       <TableCell className="px-2 py-2 text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More actions">
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>

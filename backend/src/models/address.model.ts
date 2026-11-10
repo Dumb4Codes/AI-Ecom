@@ -66,6 +66,9 @@ const addressSchema = new Schema<IAddress>(
   }
 );
 
+// Indexes for the hot query paths
+addressSchema.index({ userId: 1, isDefault: -1 });
+
 const AddressModel = mongoose.model<IAddress>("Address", addressSchema);
 
 export default AddressModel;

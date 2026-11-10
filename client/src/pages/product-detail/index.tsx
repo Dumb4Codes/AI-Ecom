@@ -15,7 +15,7 @@ import {
   TriangleAlert,
   Truck,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductBySlugQueryFn, getProductReviewsQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const ProductDetailPage = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState({ productId: "", index: 0 });
   const addToCart = useCart((state) => state.addToCart);
 
   const { data: detailData, isLoading: isDetailLoading } = useQuery({
@@ -45,9 +45,9 @@ const ProductDetailPage = () => {
   const reviews = reviewsData?.reviews ?? [];
   const ratingBreakdown = reviewsData?.ratingBreakdown ?? [];
 
-  useEffect(() => {
-    setSelectedImageIndex(0);
-  }, [product?._id]);
+  // Reset to the first image whenever the product changes (derived, no effect).
+  const selectedImageIndex =
+    selectedImage.productId === product?._id ? selectedImage.index : 0;
 
 
   const cartItems = useCart((state) => state.items);
@@ -148,7 +148,7 @@ const ProductDetailPage = () => {
       <section className="grid gap-8 lg:grid-cols-[1fr_1.55fr_430px]">
         <div className="flex flex-col gap-3">
           <div className="flex min-h-[380px] items-center justify-center rounded-xl border border-border bg-background">
-            <img
+            <img loading="lazy" decoding="async"
               src={product.images[selectedImageIndex] || product.images[0] || ""}
               alt={product.name}
               className="max-h-[330px] w-full object-contain"
@@ -161,7 +161,7 @@ const ProductDetailPage = () => {
                 <button
                   key={image + index}
                   type="button"
-                  onClick={() => setSelectedImageIndex(index)}
+                  onClick={() => setSelectedImage({ productId: product._id, index })}
                   className={cn(
                     "flex size-16 shrink-0 items-center justify-center rounded-lg border-2 bg-background p-1 transition-colors",
                     selectedImageIndex === index
@@ -170,7 +170,7 @@ const ProductDetailPage = () => {
                   )}
                   aria-label={`View image ${index + 1} of ${product.images.length}`}
                 >
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={image}
                     alt={`${product.name} thumbnail ${index + 1}`}
                     className="max-h-full max-w-full object-contain"
@@ -282,6 +282,7 @@ const ProductDetailPage = () => {
                         updateQuantity(product._id, cartItem.quantity - 1);
                       }
                     }}
+                  aria-label={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity in cart"}
                   >
                      {cartItem.quantity === 1 ? <Trash2 className="size-4" /> : <Minus className="size-4" />}
                   </Button>
@@ -296,6 +297,7 @@ const ProductDetailPage = () => {
                     onClick={() => {
                       updateQuantity(product._id, cartItem.quantity + 1);
                     }}
+                  aria-label={"Increase quantity in cart"}
                   >
                     <Plus className="size-4" />
                   </Button>
@@ -319,6 +321,7 @@ const ProductDetailPage = () => {
                     onClick={() =>
                       setQuantity((value) => Math.max(1, value - 1))
                     }
+                  aria-label={"Decrease quantity"}
                   >
                     <Minus />
                   </Button>
@@ -328,6 +331,7 @@ const ProductDetailPage = () => {
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => setQuantity((value) => value + 1)}
+                  aria-label={"Increase quantity"}
                   >
                     <Plus />
                   </Button>

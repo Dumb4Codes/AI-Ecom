@@ -5,7 +5,6 @@ import passport from "passport";
 import { findUserById } from "../services/user.service";
 import { generateGuestCartId } from "../utils/helper";
 import { setGuestCartCookie } from "../utils/cookie.util";
-import { any } from "zod";
 
 const cookieExtractor = (req: Request) => {
   return req?.cookies?.instant_access_token ?? null;

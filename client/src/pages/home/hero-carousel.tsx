@@ -1,6 +1,6 @@
-import carouselImageThree from "@/assets/images/carosuel-img-3.png";
-import carouselImageOne from "@/assets/images/carousel-img-1.png";
-import carouselImageTwo from "@/assets/images/carousel-img-2.png";
+import carouselImageThree from "@/assets/images/carousel-img-3.webp";
+import carouselImageOne from "@/assets/images/carousel-img-1.webp";
+import carouselImageTwo from "@/assets/images/carousel-img-2.webp";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -57,7 +57,7 @@ const HeroCarousel = () => {
         className="w-full"
       >
         <CarouselContent className="-ml-4">
-          {heroSlides.map((slide) => (
+          {heroSlides.map((slide, index) => (
             <CarouselItem
               key={slide.id}
               className="basis-full pl-4 lg:basis-1/2"
@@ -67,6 +67,11 @@ const HeroCarousel = () => {
                 <img
                   src={slide.image}
                   alt=""
+                  width={1000}
+                  height={363}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
                   className="absolute inset-0 size-full object-cover group-hover:scale-105"
                 />
 
@@ -76,9 +81,9 @@ const HeroCarousel = () => {
                       {slide.subtitle}
                     </p>
                   )}
-                  <h1 className="font-serif text-3xl font-semibold leading-[1.1] md:text-[2.1rem] text-black">
+                  <h2 className="font-serif text-3xl font-semibold leading-[1.1] md:text-[2.1rem] text-black">
                     {slide.title}
-                  </h1>
+                  </h2>
                   <Button asChild variant="secondary" className="h-10 w-fit rounded-full px-7 text-base"
                   >
                    <Link to={PUBLIC_ROUTES.PRODUCTS}>

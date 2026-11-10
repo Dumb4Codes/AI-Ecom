@@ -64,7 +64,7 @@ const orderItemSchema = new Schema<IOrderItem>(
       required: true,
     },
     name: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String, default: "" }, // products may have no image
     originalPrice: { type: Number, required: true },
     discountPercent: { type: Number, required: true, default: 0 },
     salePrice: { type: Number, required: true },
@@ -159,6 +159,10 @@ const orderSchema = new Schema<IOrder>(
 //     this.orderNo = generateOrderNo();
 //   }
 // });
+
+// Indexes for the hot query paths
+orderItemSchema.index({ userId: 1, createdAt: -1 });
+orderItemSchema.index({ createdAt: -1 });
 
 const OrderModel = mongoose.model<IOrder>("Order", orderSchema);
 

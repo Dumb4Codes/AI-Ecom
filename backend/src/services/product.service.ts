@@ -11,6 +11,7 @@ import {
 } from "../validators/product.validator";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
 import mongoose, { Types } from "mongoose";
+import { escapeRegExp } from "../utils/regex.util";
 
 export const getProductsService = async (query: GetProductsInput) => {
   const {
@@ -51,9 +52,10 @@ export const getProductsService = async (query: GetProductsInput) => {
   }
 
   if (keyword) {
+    const safeKeyword = escapeRegExp(keyword);
     filter.$or = [
-      { name: { $regex: keyword, $options: "i" } },
-      { description: { $regex: keyword, $options: "i" } },
+      { name: { $regex: safeKeyword, $options: "i" } },
+      { description: { $regex: safeKeyword, $options: "i" } },
     ];
   }
 

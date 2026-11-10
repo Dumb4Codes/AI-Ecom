@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getErrorMessage } from "@/lib/errors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -72,9 +73,8 @@ export default function AdminOrdersPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
       queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
     },
-    onError: (err: any) => {
-      const errMsg = err.response?.data?.message || err.message || "Failed to update status";
-      toast.error(errMsg);
+    onError: (err: unknown) => {
+      toast.error(getErrorMessage(err, "Failed to update status"));
     },
   });
 
@@ -163,7 +163,7 @@ export default function AdminOrdersPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  orders.map((order: any) => (
+                  orders.map((order) => (
                     <TableRow key={order._id} className="hover:bg-muted/30 text-[13px]!">
                       <TableCell className="px-6 py-2 font-medium">
                         #{order.orderNo}
@@ -240,7 +240,7 @@ export default function AdminOrdersPage() {
                               (statusKey) =>
                                 statusKey !== order.status &&
                                 !order.statusHistory?.some(
-                                  (history: any) =>
+                                  (history) =>
                                     history.status.toLowerCase() ===
                                     statusKey.toLowerCase(),
                                 ),

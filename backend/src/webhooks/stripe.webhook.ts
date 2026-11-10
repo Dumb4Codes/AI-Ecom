@@ -35,46 +35,58 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  const order = await OrderModel.findById(orderId);
-  if (!order) {
-    res.status(200).json({ received: true });
-    return;
-  }
-
+  // Stripe retries and may deliver an event more than once. Each transition is
+  // an atomic compare-and-set on `paymentStatus: pending`, so a replayed event
+  // matches nothing and cannot double-decrement stock or flip a paid order.
   switch (event.type) {
     case "checkout.session.completed": {
-      order.paymentStatus = PAYMENT_STATUS.PAID;
-      order.status = ORDER_STATUS.CONFIRMED;
-      order.statusHistory.push({
-        status: ORDER_STATUS.CONFIRMED,
-        date: new Date(),
-      });
+      const order = await OrderModel.findOneAndUpdate(
+        { _id: orderId, paymentStatus: PAYMENT_STATUS.PENDING },
+        {
+          $set: {
+            paymentStatus: PAYMENT_STATUS.PAID,
+            status: ORDER_STATUS.CONFIRMED,
+          },
+          $push: {
+            statusHistory: { status: ORDER_STATUS.CONFIRMED, date: new Date() },
+          },
+        },
+        { returnDocument: "after" }
+      );
 
-      await order.save();
+      if (order) {
+        await CartModel.deleteOne({ userId: order.userId });
 
-      await CartModel.deleteOne({ userId: order.userId });
+        await ProductModel.bulkWrite(
+          order.items.map((item) => ({
+            updateOne: {
+              filter: { _id: item.productId },
+              update: { $inc: { stockCount: -item.quantity } },
+            },
+          }))
+        );
 
-      for (const item of order.items) {
-        await ProductModel.findByIdAndUpdate(item.productId, {
-          $inc: { stockCount: -item.quantity },
-        });
+        console.log(`Order ${order.orderNo} paid and confirmed`);
       }
-
-      console.log(`Order ${order.orderNo} paid and confirmed`);
       break;
     }
 
     case "checkout.session.expired": {
-      order.paymentStatus = PAYMENT_STATUS.FAILED;
-      order.status = ORDER_STATUS.CANCELLED;
-      order.statusHistory.push({
-        status: ORDER_STATUS.CANCELLED,
-        date: new Date(),
-      });
+      const order = await OrderModel.findOneAndUpdate(
+        { _id: orderId, paymentStatus: PAYMENT_STATUS.PENDING },
+        {
+          $set: {
+            paymentStatus: PAYMENT_STATUS.FAILED,
+            status: ORDER_STATUS.CANCELLED,
+          },
+          $push: {
+            statusHistory: { status: ORDER_STATUS.CANCELLED, date: new Date() },
+          },
+        },
+        { returnDocument: "after" }
+      );
 
-      await order.save();
-
-      console.log(`Order ${order.orderNo} payment expired`);
+      if (order) console.log(`Order ${order.orderNo} payment expired`);
       break;
     }
   }

@@ -1,17 +1,23 @@
 import { Truck, X, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const BANNER_STORAGE_KEY = "instant-promo-banner-dismissed";
 
 const Banner = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(sessionStorage.getItem(BANNER_STORAGE_KEY) !== "true");
-  }, []);
+  const [isVisible, setIsVisible] = useState(() => {
+    try {
+      return sessionStorage.getItem(BANNER_STORAGE_KEY) !== "true";
+    } catch {
+      return true;
+    }
+  });
 
   const handleDismiss = () => {
-    sessionStorage.setItem(BANNER_STORAGE_KEY, "true");
+    try {
+      sessionStorage.setItem(BANNER_STORAGE_KEY, "true");
+    } catch {
+      /* storage unavailable (private mode) – dismiss for this view only */
+    }
     setIsVisible(false);
   };
 

@@ -45,6 +45,18 @@ export const createOrderService = async (
     quantity: number;
   }>;
 
+  // Refuse to oversell: every line must still be available in the requested quantity.
+  const unavailable = items.find(
+    (item) => !item.productId || item.productId.stockCount < item.quantity
+  );
+  if (unavailable) {
+    throw new BadRequestException(
+      unavailable.productId
+        ? `"${unavailable.productId.name}" only has ${unavailable.productId.stockCount} left in stock`
+        : "A product in your cart is no longer available"
+    );
+  }
+
   const totals = calculateCartTotals(items);
 
   const orderItems = items.map((item) => ({
@@ -85,9 +97,11 @@ export const createOrderService = async (
 
    await Promise.all(
       items.map((item) =>
-        ProductModel.findByIdAndUpdate(item.productId, {
-          $inc: { stockCount: -item.quantity },
-        })
+        // Guarded decrement: never drives stock below zero under concurrency.
+        ProductModel.updateOne(
+          { _id: item.productId._id, stockCount: { $gte: item.quantity } },
+          { $inc: { stockCount: -item.quantity } }
+        )
       )
     );
 
