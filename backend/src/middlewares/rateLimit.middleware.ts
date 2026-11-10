@@ -27,7 +27,7 @@ export const authLimiter = build(
   "Too many authentication attempts, please try again later.",
 );
 
-/** AI generation costs money – keep it tight. */
+/** AI generation costs money, keep it tight. */
 export const aiLimiter = build(
   60 * 1000,
   10,

@@ -20,7 +20,7 @@ const paymentOptions = [
   {
     value: CheckoutPaymentMethod.CASH_ON_DELIVERY,
     title: "Cash on Delivery",
-    description: "Pay in cash when your order arrives — nothing charged now.",
+    description: "Pay in cash when your order arrives. Nothing is charged now.",
     icon: Banknote,
   },
 ];

@@ -1,4 +1,4 @@
-# 🛒 AI Ecommerce Platform — MERN Stack
+# 🛒 AI Ecommerce Platform: MERN Stack
 
 A full-stack ecommerce platform with guest & authenticated carts, product catalog with AI-assisted content tools, Stripe checkout, order tracking, ratings & reviews, and an admin dashboard with analytics.
 
@@ -11,13 +11,13 @@ A full-stack ecommerce platform with guest & authenticated carts, product catalo
 - 🔐 JWT (cookie-based) authentication
 - 🛒 Guest cart with auto-merge on login
 - 🛍️ Full shopping cart & checkout flow
-- 📦 Product catalog — categories, search, filtering, sorting, pagination
+- 📦 Product catalog: categories, search, filtering, sorting, pagination
 - 🖼️ Image uploads via AWS S3
 - ⭐ Ratings & reviews (verified purchase only)
 - 💳 Stripe Checkout + webhook-based payment confirmation
 - 📍 Saved shipping addresses
 - 📦 Order placement, tracking, and status updates
-- 👨‍💼 Admin dashboard — products, orders, analytics
+- 👨‍💼 Admin dashboard: products, orders, analytics
 - 🤖 AI-assisted admin tools (product title rewrite & description generation)
 
 ## 🏗️ Tech Stack
@@ -53,7 +53,7 @@ AI-Ecom/
 cd backend
 npm install
 cp .env.example .env
-# fill in the values in .env — see table below
+# fill in the values in .env: see table below
 npm run seed:categories   # optional: seeds initial categories
 # optional: create/promote a demo admin so you can open the admin dashboard
 DEMO_ADMIN_EMAIL=admin@example.com DEMO_ADMIN_PASSWORD='choose-a-password' npm run seed:demo-admin
@@ -92,7 +92,7 @@ The app will be available at `http://localhost:5173`, with the API at `http://lo
 | `AWS_SECRET_ACCESS_KEY` | From the same IAM user |
 | `AWS_S3_BUCKET_NAME` | Name of the S3 bucket used for product images |
 | `FRONTEND_ORIGIN` | URL of your deployed frontend (for CORS) |
-| `AI_GATEWAY_API_KEY` | From [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) — powers the AI admin tools |
+| `AI_GATEWAY_API_KEY` | From [Vercel AI Gateway](https://vercel.com/docs/ai-gateway), powers the AI admin tools |
 
 ### Frontend (`client/.env`)
 

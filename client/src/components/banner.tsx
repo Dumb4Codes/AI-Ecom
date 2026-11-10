@@ -16,7 +16,7 @@ const Banner = () => {
     try {
       sessionStorage.setItem(BANNER_STORAGE_KEY, "true");
     } catch {
-      /* storage unavailable (private mode) – dismiss for this view only */
+      /* storage unavailable (private mode); dismiss for this view only */
     }
     setIsVisible(false);
   };

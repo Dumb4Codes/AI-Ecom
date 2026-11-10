@@ -7,7 +7,7 @@ import ProductSections from "./product-sections";
 const HomePage = () => {
   return (
     <div className="w-full">
-      <h1 className="sr-only">Instant – fresh groceries delivered fast</h1>
+      <h1 className="sr-only">Instant: fresh groceries delivered fast</h1>
       <HeroCarousel />
       <CategoriesSection />
       <TodayDealsSection />
