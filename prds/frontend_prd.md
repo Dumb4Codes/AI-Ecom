@@ -1,4 +1,4 @@
-# Instant E-Commerce Frontend — TestSprite Web Test PRD
+# Instant E-Commerce Frontend: TestSprite Web Test PRD
 
 ## App Overview
 A grocery e-commerce SPA built with Vite + React 19 + TypeScript. Users browse products, manage a cart (guest or logged-in), place orders, track them, and leave reviews. Admins manage products, orders, and see analytics.
@@ -103,12 +103,12 @@ A grocery e-commerce SPA built with Vite + React 19 + TypeScript. Users browse p
 
 ### AppLayout
 Wraps all non-admin routes. Components from top to bottom:
-1. **Banner** (`src/components/banner.tsx`) — Top promo banner ("Free delivery over $20")
-2. **Nav** (`src/components/nav.tsx`) — Logo, search bar, category dropdown, cart button, auth
+1. **Banner** (`src/components/banner.tsx`): Top promo banner ("Free delivery over $20")
+2. **Nav** (`src/components/nav.tsx`): Logo, search bar, category dropdown, cart button, auth
 3. **`<main>`** with `<Outlet />`
 4. **Footer** (`src/components/footer.tsx`)
-5. **CartSheet** (`src/components/cart-sheet.tsx`) — Slide-out cart from right
-6. **AuthDialog** — Modal for login/register
+5. **CartSheet** (`src/components/cart-sheet.tsx`): Slide-out cart from right
+6. **AuthDialog**: Modal for login/register
 
 ### AccountLayout
 Used for user account pages. Two-column layout:
@@ -211,7 +211,7 @@ Two-column: sidebar filters (left, ~280px) + product grid (right)
 - **Paginated**: "Show more" or page controls
 
 ### Related Products
-- Fetches `["related-products", slug]` — GET `/products/:slug` with `relatedProducts` in response
+- Fetches `["related-products", slug]`, GET `/products/:slug` with `relatedProducts` in response
 - Horizontal scroll row or grid of 4-6 product cards
 - Same card style as main product grid
 
@@ -323,7 +323,7 @@ Two-column: accordion panels (left) + order summary sidebar (right, sticky)
 - **Items list**: Each item has image, name, quantity, price
 - **Status history timeline**: All status changes with dates (read from `statusHistory`)
 - **Delivery address card**: Shows full address
-- **Payment summary**: Subtotal, delivery fee, tax, total — same format as cart
+- **Payment summary**: Subtotal, delivery fee, tax, total: same format as cart
 - **Payment status badge**: "Paid" or "Pending"
 
 ---

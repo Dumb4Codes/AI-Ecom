@@ -13,7 +13,7 @@ git add .
 git commit -m "Initial commit"
 ```
 
-Create a **new, empty** repository under your own GitHub account (don't fork the original — a fresh repo has no history tying it back to anyone else), then:
+Create a **new, empty** repository under your own GitHub account (don't fork the original, a fresh repo has no history tying it back to anyone else), then:
 
 ```bash
 git remote add origin https://github.com/<your-username>/<your-repo-name>.git
@@ -23,22 +23,22 @@ git push -u origin main
 
 ---
 
-## 1. Set up your database — MongoDB Atlas
+## 1. Set up your database: MongoDB Atlas
 
 1. Create a free account at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas).
 2. Create a free (M0) cluster.
 3. Under **Database Access**, create a database user + password.
-4. Under **Network Access**, add `0.0.0.0/0` (allow access from anywhere — needed since Render's IP isn't static on the free tier).
+4. Under **Network Access**, add `0.0.0.0/0` (allow access from anywhere, needed since Render's IP isn't static on the free tier).
 5. Click **Connect → Drivers**, copy the connection string. It looks like:
    `mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/`
-6. Add a database name to the end, e.g. `.../ai-ecom?retryWrites=true&w=majority` — this becomes your `MONGO_URI`.
+6. Add a database name to the end, e.g. `.../ai-ecom?retryWrites=true&w=majority`, this becomes your `MONGO_URI`.
 
 ## 2. Stripe
 
 1. Sign up at [dashboard.stripe.com/register](https://dashboard.stripe.com/register).
 2. Stay in **test mode** for now (toggle top-right).
 3. Go to **Developers → API keys** → copy the **Secret key** → this is `STRIPE_SECRET_KEY`.
-4. You'll create the webhook (`STRIPE_WEBHOOK_SECRET`) **after** the backend is deployed, in step 5 below — Stripe needs your live backend URL first.
+4. You'll create the webhook (`STRIPE_WEBHOOK_SECRET`) **after** the backend is deployed, in step 5 below, Stripe needs your live backend URL first.
 
 ## 3. AWS S3 (image uploads)
 
@@ -47,7 +47,7 @@ git push -u origin main
 3. Go to **IAM → Users → Create user**. Give it programmatic access only (no console login needed).
 4. Attach the policy `AmazonS3FullAccess` (fine for a personal project; for production you'd scope this down to just your bucket).
 5. After creating the user, go to **Security credentials → Create access key** → choose "Application running outside AWS" → copy the **Access key ID** and **Secret access key** immediately (the secret is only shown once).
-6. These map to: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET_NAME` (the bucket name from step 2), and `AWS_REGION` (e.g. `us-east-1` — matches the region you picked for the bucket).
+6. These map to: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET_NAME` (the bucket name from step 2), and `AWS_REGION` (e.g. `us-east-1`; matches the region you picked for the bucket).
 
 ## 4. Vercel AI Gateway (AI admin tools)
 
@@ -59,13 +59,13 @@ git push -u origin main
 ## 5. Deploy the backend to Render
 
 1. Sign up at [render.com](https://render.com) and connect your GitHub account.
-2. **New → Blueprint**, point it at your repo — it will detect `render.yaml` at the project root and pre-fill the service. (Alternatively: **New → Web Service**, root directory `backend`, build command `npm install && npm run build`, start command `npm run start`.)
+2. **New → Blueprint**, point it at your repo: it will detect `render.yaml` at the project root and pre-fill the service. (Alternatively: **New → Web Service**, root directory `backend`, build command `npm install && npm run build`, start command `npm run start`.)
 3. Fill in the environment variables when prompted (or add them under the service's **Environment** tab after creation):
-   - `MONGO_URI`, `JWT_SECRET` (any long random string — e.g. run `openssl rand -base64 32`), `JWT_EXPIRES_IN=7d`
+   - `MONGO_URI`, `JWT_SECRET` (any long random string, e.g. run `openssl rand -base64 32`), `JWT_EXPIRES_IN=7d`
    - `STRIPE_SECRET_KEY`
    - `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET_NAME`
    - `AI_GATEWAY_API_KEY`
-   - `FRONTEND_ORIGIN` — leave a placeholder for now (e.g. `http://localhost:5173`), you'll update it in step 7
+   - `FRONTEND_ORIGIN`, leave a placeholder for now (e.g. `http://localhost:5173`), you'll update it in step 7
    - Leave `STRIPE_WEBHOOK_SECRET` blank for now
 4. Deploy. Note your live backend URL, e.g. `https://ai-ecom-backend.onrender.com`.
 5. **Set up the Stripe webhook now:**
@@ -74,7 +74,7 @@ git push -u origin main
    - Select the `checkout.session.completed` event (and any others your checkout flow uses)
    - Copy the **Signing secret** → set it as `STRIPE_WEBHOOK_SECRET` in Render's environment tab → redeploy.
 
-> Free-tier note: Render's free web services spin down after inactivity and take ~30–60s to wake on the next request. Fine for a resume/demo project; upgrade to a paid instance if you want it always-warm.
+> Free-tier note: Render's free web services spin down after inactivity and take ~30-60s to wake on the next request. Fine for a resume/demo project; upgrade to a paid instance if you want it always-warm.
 
 ## 6. Deploy the frontend to Vercel
 
@@ -105,6 +105,6 @@ You'll still need to add products yourself through the admin dashboard (or write
 ## Checklist before you share the link
 
 - [ ] Test the full flow end-to-end on the live URLs (not localhost)
-- [ ] Switch Stripe from test to live mode only if you intend to take real payments — otherwise leave it in test mode and say so in your resume/portfolio blurb
+- [ ] Switch Stripe from test to live mode only if you intend to take real payments, otherwise leave it in test mode and say so in your resume/portfolio blurb
 - [ ] Double check `.env` was never committed (`git log --all --full-history -- '**/.env'` should return nothing)
-- [ ] Add a couple of screenshots or a short screen recording to your README/portfolio — recruiters skim, they don't clone repos
+- [ ] Add a couple of screenshots or a short screen recording to your README/portfolio, recruiters skim, they don't clone repos

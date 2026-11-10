@@ -11,7 +11,7 @@ Examples:
 
 Rules:
 - Output ONLY the product title, nothing else. No quotes, no markdown, no explanations.
-- Separate each attribute with a comma — brand, descriptors, product type, then size/unit last.
+- Separate each attribute with a comma: brand, descriptors, product type, then size/unit last.
 - Make it concise, shoppable, and natural sounding.
 - Preserve the original meaning and key details from the input.
 - If a unit is provided, include it as the final comma-separated attribute.
@@ -34,7 +34,7 @@ Description: "A classic pepper sauce with bold heat, great for eggs, wings, and 
 
 Rules:
 - Output ONLY the description, nothing else. No markdown, no quotes.
-- Be factual and helpful — highlight uses, quality, or key features.
+- Be factual and helpful: highlight uses, quality, or key features.
 - Use a warm but professional grocery-store tone.
 - Keep it under 300 characters.
 - Do not repeat the product title verbatim in the description.

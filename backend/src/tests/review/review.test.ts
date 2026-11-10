@@ -99,13 +99,13 @@ async function testCreateReviewInvalidIds(): Promise<void> {
 }
 
 async function testCreateReviewNotDelivered(): Promise<void> {
-  // The order is only "placed", not "delivered" — should get 400
+  // The order is only "placed", not "delivered", should get 400
   if (!userCookie || !orderId || !orderItemId) throw new Error("no setup state");
   const { status } = await request("POST", "/reviews", {
     cookie: userCookie,
     body: { orderId, orderItemId, rating: 4, comment: "Great product!" },
   });
-  // Order is placed (COD, not delivered) — expect 400: "Order must be delivered and paid"
+  // Order is placed (COD, not delivered), expect 400: "Order must be delivered and paid"
   if (status !== 400) throw new Error(`expected 400, got ${status}`);
 }
 
