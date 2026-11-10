@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 import { getCartQueryFn, updateCartMutationFn } from "@/lib/api";
 // import { updateCartMutationFn } from "@/lib/api";
 
@@ -70,7 +71,7 @@ const syncToServer = debounce(
         }
         return "Cart saved successfully!";
       },
-      error: ({ response }) => {
+      error: (error) => {
         _rollback();
         pendingSnapshot = null;
         useCart.setState({
@@ -80,7 +81,7 @@ const syncToServer = debounce(
           tax: 0,
           orderTotal: 0,
         });
-        return response.data.message || "Failed to update cart. Changes reverted.";
+        return getErrorMessage(error, "Failed to update cart. Changes reverted.");
       },
     });
 

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/lib/errors";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -70,8 +71,8 @@ const AccountAddressesPage = () => {
       form.reset();
       setIsOpen(false);
     },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to add address");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to add address"));
     },
   });
 

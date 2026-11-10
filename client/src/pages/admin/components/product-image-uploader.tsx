@@ -122,7 +122,7 @@ export default function ProductImageUploader({ images, onImagesChange, error }: 
             <div className="grid grid-cols-2 gap-3">
               {pendingFiles.map((item, index) => (
                 <div key={index} className="group relative aspect-square overflow-hidden rounded-lg border">
-                  <img src={item.preview} alt="Pending" className="h-full w-full object-cover" />
+                  <img loading="lazy" decoding="async" src={item.preview} alt="Pending" className="h-full w-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removePendingFile(index)}
@@ -168,7 +168,7 @@ export default function ProductImageUploader({ images, onImagesChange, error }: 
             <div className="grid grid-cols-2 gap-3">
               {images.map((url, index) => (
                 <div key={index} className="group relative aspect-square overflow-hidden rounded-lg border">
-                  <img src={url} alt={`Product ${index + 1}`} className="h-full w-full object-cover" />
+                  <img loading="lazy" decoding="async" src={url} alt={`Product ${index + 1}`} className="h-full w-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImage(index)}

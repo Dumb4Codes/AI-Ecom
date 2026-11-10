@@ -129,6 +129,11 @@ productSchema.pre("save", async function () {
   }
 });
 
+// Indexes for the hot query paths
+productSchema.index({ isActive: 1, categoryId: 1, salePrice: 1 });
+productSchema.index({ isActive: 1, createdAt: -1 });
+productSchema.index({ isActive: 1, discountPercent: -1 });
+
 const ProductModel = mongoose.model<IProduct>("Product", productSchema);
 
 export default ProductModel;

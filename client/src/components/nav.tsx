@@ -1,10 +1,6 @@
 import CartButton from "@/components/cart-button";
+import { getErrorMessage } from "@/lib/errors";
 import Logo from "@/components/logo";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +38,6 @@ const Nav = () => {
   const { openAuth } = useAuth();
 
   const isAdmin = user?.isAdmin;
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
 
   const resetCart = useCart((state) => state.resetCart);
 
@@ -55,8 +50,8 @@ const Nav = () => {
       toast.success("Successfully logged out");
       navigate(PUBLIC_ROUTES.HOME);
     },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to log out");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to log out"));
     }
   });
 
@@ -77,10 +72,14 @@ const Nav = () => {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background">
-      <div className="flex h-16 w-full max-width mx-auto items-center gap-4 px-4">
-        <Logo className="shrink-0 lg:mr-10" />
+      <div className="flex w-full max-width mx-auto flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2 md:h-16 md:flex-nowrap md:gap-4 md:py-0">
+        <Logo className="mr-auto shrink-0 md:mr-0 lg:mr-10" />
 
-        <form onSubmit={handleSearch} className="min-w-0 flex-1">
+        <form
+          onSubmit={handleSearch}
+          role="search"
+          className="order-last min-w-0 basis-full md:order-none md:basis-auto md:flex-1"
+        >
           <InputGroup className="mx-auto h-11 w-full max-w-6xl rounded-full border border-black/70 bg-background px-2">
             <InputGroupAddon align="inline-start" className="pl-2 pr-1">
               <Search className="size-5" />
@@ -89,6 +88,7 @@ const Nav = () => {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search products, and recipes"
+              aria-label="Search products"
               className="h-10 text-base font-medium"
               type="search"
             />
@@ -101,14 +101,14 @@ const Nav = () => {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                onClick={() => openAuth("login")}
+                aria-label="Account menu"
                 className="flex shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 text-foreground transition hover:bg-accent"
               >
                 <UserRound className="size-7 stroke-[2.3]" />
                 <span className="hidden text-left leading-tight md:block">
-                  <span className="block text-[12px] font-medium">Welcome</span>
-                  <span className="block text-sm font-bold">
-                    Sign in / Register
+                  <span className="block text-[12px] font-medium">Welcome back</span>
+                  <span className="block max-w-28 truncate text-sm font-bold">
+                    {user.name}
                   </span>
                 </span>
               </button>
@@ -164,6 +164,7 @@ const Nav = () => {
           <button
             type="button"
             onClick={() => openAuth("login")}
+            aria-label="Sign in or register"
             className="hidden shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 text-foreground transition hover:bg-accent md:flex"
           >
             <UserRound className="size-7 stroke-[2.3]" />

@@ -68,7 +68,7 @@ const CategoriesSection = () => {
                   to={`/products?category=${category._id}`}
                 >
                   <span className="flex size-20 items-center justify-center rounded-xl p-0.5 transition hover:bg-muted group-hover:scale-105 sm:size-24">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={category.imageUrl}
                       alt={category.name}
                       className="size-full object-contain"

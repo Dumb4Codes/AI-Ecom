@@ -38,7 +38,7 @@ const OrderDetailSidebar = ({ order }: OrderDetailSidebarProps) => {
               key={item.productId}
               className="grid grid-cols-[48px_1fr_auto] items-center gap-3"
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={item.image}
                 alt={item.name}
                 className="size-11 object-contain"

@@ -19,4 +19,14 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // shadcn/ui primitives and the theme provider intentionally co-export
+    // variants/hooks with components; fast-refresh granularity is not needed.
+    files: ['src/components/ui/**', 'src/components/theme-provider.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+      // vendored shadcn carousel syncs embla state in an effect by design
+      'react-hooks/set-state-in-effect': 'off',
+    },
+  },
 ])

@@ -49,6 +49,10 @@ const reviewSchema = new Schema<IReview>(
   }
 );
 
+// Indexes for the hot query paths
+reviewSchema.index({ productId: 1, createdAt: -1 });
+reviewSchema.index({ userId: 1, createdAt: -1 });
+
 const ReviewModel = mongoose.model<IReview>("Review", reviewSchema);
 
 export default ReviewModel;

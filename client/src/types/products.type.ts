@@ -23,7 +23,8 @@ export type PaginationType = {
   page: number;
   limit: number;
   totalPages: number;
-  hasMore: boolean;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
 };
 
 export type ProductResponseType = {

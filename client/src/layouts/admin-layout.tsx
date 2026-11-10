@@ -1,6 +1,8 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ShoppingCart, Package, ArrowLeft, LogOut } from "lucide-react";
 import { Navigate } from "react-router-dom";
+import { Suspense } from "react";
+import RouteFallback from "@/components/route-fallback";
 import { Spinner } from "@/components/ui/spinner";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ import { logoutMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PROTECTED_ROUTES } from "@/routes/route";
+import { useUser } from "@/hooks/use-user";
 
 const adminNavItems = [
   {
@@ -42,14 +45,7 @@ const adminNavItems = [
 ];
 
 export default function AdminLayout() {
-  //const { data: user, isLoading } = useUser();
-
-  const isLoading = false
-  const user = {
-    name:"John",
-    email:"john@gmail.com",
-    isAdmin:true
-  }
+  const { data: user, isLoading } = useUser();
   const navigate = useNavigate();
   const {pathname} = useLocation()
   const queryClient = useQueryClient();
@@ -65,7 +61,7 @@ export default function AdminLayout() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[70h] flex-col items-center justify-center gap-3">
+      <div className="flex min-h-[70vh] flex-col items-center justify-center gap-3">
         <Logo />
         <Spinner className="size-8" />
       </div>
@@ -151,7 +147,9 @@ export default function AdminLayout() {
             </div>
           </header>
           <main className="flex-1 w-full max-w-[1100px] mx-auto overflow-y-auto p-4">
-            <Outlet />
+            <Suspense fallback={<RouteFallback />}>
+              <Outlet />
+            </Suspense>
           </main>
         </div>
       </div>

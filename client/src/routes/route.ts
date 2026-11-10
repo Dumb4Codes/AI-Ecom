@@ -1,16 +1,17 @@
-import AccountAddressesPage from "@/pages/account/addresses";
-import AccountReviewsPage from "@/pages/account/reviews";
-import CheckoutPage from "@/pages/checkout";
-import HomePage from "@/pages/home";
-import OrderTrackingPage from "@/pages/orders/order-tracking";
-import OrdersPage from "@/pages/orders/orders";
-import ProductDetailPage from "@/pages/product-detail";
-import ProductsPage from "@/pages/products";
-import SearchResultPage from "@/pages/search-results";
-import AdminDashboardPage from "@/pages/admin/dashboard";
-import AdminOrdersPage from "@/pages/admin/orders";
-import AdminProductsPage from "@/pages/admin/products";
-import AdminNewProductPage from "@/pages/admin/new-product";
+import { lazy } from "react";
+const AccountAddressesPage = lazy(() => import("@/pages/account/addresses"));
+const AccountReviewsPage = lazy(() => import("@/pages/account/reviews"));
+const CheckoutPage = lazy(() => import("@/pages/checkout"));
+const HomePage = lazy(() => import("@/pages/home"));
+const OrderTrackingPage = lazy(() => import("@/pages/orders/order-tracking"));
+const OrdersPage = lazy(() => import("@/pages/orders/orders"));
+const ProductDetailPage = lazy(() => import("@/pages/product-detail"));
+const ProductsPage = lazy(() => import("@/pages/products"));
+const SearchResultPage = lazy(() => import("@/pages/search-results"));
+const AdminDashboardPage = lazy(() => import("@/pages/admin/dashboard"));
+const AdminOrdersPage = lazy(() => import("@/pages/admin/orders"));
+const AdminProductsPage = lazy(() => import("@/pages/admin/products"));
+const AdminNewProductPage = lazy(() => import("@/pages/admin/new-product"));
 
 
 // export const AUTH_ROUTES = {

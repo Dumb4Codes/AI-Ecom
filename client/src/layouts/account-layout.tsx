@@ -9,6 +9,8 @@ import {
   ReceiptText,
 } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Suspense } from "react";
+import RouteFallback from "@/components/route-fallback";
 
 const accountNavItems = [
   {
@@ -37,7 +39,7 @@ const AccountLayout = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="grid min-h-[calc(100vh-8rem)] gap-8 py-6 lg:grid-cols-[260px_1fr]">
+    <div className="grid min-h-[calc(100vh-8rem)] grid-cols-[minmax(0,1fr)] gap-8 py-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="border-border lg:border-r lg:pr-5">
         <div className="flex flex-col gap-2 lg:sticky lg:top-24">
           <Button
@@ -87,7 +89,9 @@ const AccountLayout = () => {
       </aside>
 
       <section className="min-w-0">
-        <Outlet />
+        <Suspense fallback={<RouteFallback />}>
+          <Outlet />
+        </Suspense>
       </section>
     </div>
   );

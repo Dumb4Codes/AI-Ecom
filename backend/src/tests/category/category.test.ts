@@ -1,4 +1,4 @@
-const BASE = "https://instant-cart.onrender.com/api";
+const BASE = process.env.API_BASE_URL ?? "http://localhost:8000/api";
 
 async function request(method: string, path: string) {
   const res = await fetch(`${BASE}${path}`, { method, redirect: "manual" });

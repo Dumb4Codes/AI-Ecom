@@ -103,7 +103,7 @@ const ProductCard = ({
             to={productPath}
             className="flex size-full items-end justify-center"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={imageUrl}
               alt={name}
               className="mb-2 max-h-full max-w-full object-contain group-hover:scale-[1.04]"

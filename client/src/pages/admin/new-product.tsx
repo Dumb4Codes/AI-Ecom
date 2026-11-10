@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { getErrorMessage } from "@/lib/errors";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -50,7 +51,8 @@ export default function AdminNewProductPage() {
   const { id } = useParams<{ id?: string }>();
   const isEditMode = Boolean(id);
   const queryClient = useQueryClient();
-  const [images, setImages] = useState<string[]>([]);
+  // null = user has not edited images; fall back to the loaded product's images.
+  const [imagesDraft, setImages] = useState<string[] | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
 
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
@@ -63,6 +65,7 @@ export default function AdminNewProductPage() {
     queryFn: () => getProductByIdQueryFn(id!),
     enabled: isEditMode,
   });
+  const images = imagesDraft ?? existingProductData?.product.images ?? [];
 
   const categories = categoriesData?.categories || [];
 
@@ -81,8 +84,9 @@ export default function AdminNewProductPage() {
     },
   });
 
-  const originalPrice = form.watch("originalPrice");
-  const discountPercent = form.watch("discountPercent");
+  const originalPrice = useWatch({ control: form.control, name: "originalPrice" });
+  const discountPercent = useWatch({ control: form.control, name: "discountPercent" });
+  const nameValue = useWatch({ control: form.control, name: "name" });
   const salePrice = calculateSalePrice(originalPrice, discountPercent);
 
   useEffect(() => {
@@ -99,9 +103,8 @@ export default function AdminNewProductPage() {
         stockCount: product.stockCount,
         isActive: product.isActive,
       });
-      setImages(product.images || []);
     }
-  }, [existingProductData, isEditMode]);
+  }, [existingProductData, isEditMode, form]);
 
   const createMutation = useMutation({
     mutationFn: createProductMutationFn,
@@ -110,8 +113,8 @@ export default function AdminNewProductPage() {
       toast.success("Product created successfully");
       navigate("/admin/products");
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "Failed to create product");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to create product"));
     },
   });
 
@@ -123,15 +126,15 @@ export default function AdminNewProductPage() {
       toast.success("Product updated successfully");
       navigate("/admin/products");
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "Failed to update product");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to update product"));
     },
   });
 
   const aiMutation = useMutation({
     mutationFn: generateProductAiMutationFn,
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "AI generation failed");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "AI generation failed"));
     },
   });
 
@@ -185,7 +188,7 @@ export default function AdminNewProductPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/admin/products")}>
+        <Button variant="ghost" size="icon" aria-label="Back to products" onClick={() => navigate("/admin/products")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -271,7 +274,7 @@ export default function AdminNewProductPage() {
                           variant="ghost"
                           size="sm"
                             className="gap-2 bg-linear-to-r from-purple-500 from-50%  to-blue-500 text-white"
-                          disabled={!form.watch("name").trim() || aiMutation.isPending}
+                          disabled={!nameValue?.trim() || aiMutation.isPending}
                           onClick={handleGenerateDesc}
                         >
                           {aiMutation.isPending && aiMutation.variables?.action === "generate-desc"  ? (

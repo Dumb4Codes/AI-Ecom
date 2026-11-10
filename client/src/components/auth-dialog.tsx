@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getErrorMessage } from "@/lib/errors";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,12 +52,8 @@ export const AuthDialog = () => {
       toast.success("Successfully logged in!");
       closeAuth();
     },
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Unable to login. Try again."
-      );
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Unable to login. Try again."));
     },
   });
 
@@ -69,12 +66,8 @@ export const AuthDialog = () => {
       toast.success("Successfully registered!");
       closeAuth();
     },
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Unable to create account. Try again."
-      );
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Unable to create account. Try again."));
     },
   });
 

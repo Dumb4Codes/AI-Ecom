@@ -1,4 +1,4 @@
-const BASE = "https://instant-cart.onrender.com/api";
+const BASE = process.env.API_BASE_URL ?? "http://localhost:8000/api";
 
 function uniqueEmail(): string {
   return `testuser${Date.now()}${Math.random().toString(36).slice(2, 8)}@example.com`;

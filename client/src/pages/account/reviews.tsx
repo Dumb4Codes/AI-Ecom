@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { getErrorMessage } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -55,9 +56,9 @@ const AccountReviewsPage = () => {
   });
 
   const reviewableList = (reviewableData?.orders || []).flatMap(
-    (order:any) => order.items
-      .filter((i:any) => !i.isReviewed)
-      .map((item:any) => ({
+    (order) => order.items
+      .filter((i) => !i.isReviewed)
+      .map((item) => ({
         item:item,
         orderId:order._id,
         orderNo: order.orderNo,
@@ -116,7 +117,7 @@ const AccountReviewsPage = () => {
 
         <TabsContent value="to-review" className="flex flex-col gap-4">
           {reviewableList.length > 0 ? (
-            reviewableList.map((entry:any) => (
+            reviewableList.map((entry) => (
               <ReviewPromptCard
                 key={`${entry.orderId}-${entry.item._id}`}
                 item={entry.item}
@@ -142,7 +143,7 @@ const AccountReviewsPage = () => {
 
         <TabsContent value="reviewed" className="flex flex-col gap-4">
           {submittedList.length > 0 ? (
-            submittedList.map((review:any) => (
+            submittedList.map((review) => (
               <SubmittedReviewCard key={review._id} review={review} />
             ))
           ) : (
@@ -210,7 +211,6 @@ const ReviewPromptCard = ({
     _id: string;
     image: string;
     name: string;
-    slug: string;
   };
   orderId: string;
   orderNo:string;
@@ -227,12 +227,8 @@ const ReviewPromptCard = ({
       queryClient.invalidateQueries({ queryKey: ["reviewable-items"] });
       queryClient.invalidateQueries({ queryKey: ["user-reviews"] });
     },
-    onError: (err: any) => {
-      const errMsg =
-        err.response?.data?.message ||
-        err.message ||
-        "Failed to submit review";
-      toast.error(errMsg);
+    onError: (err: unknown) => {
+      toast.error(getErrorMessage(err, "Failed to submit review"));
     },
   });
 
@@ -250,7 +246,7 @@ const ReviewPromptCard = ({
     <Card className="bg-background shadow-xs">
       <CardContent className="grid gap-4 p-4 md:grid-cols-[76px_1fr]">
         <div className="grid size-18 place-items-center rounded-xl border border-border bg-background">
-          <img src={item.image} alt={item.name} className="size-14 object-contain" />
+          <img loading="lazy" decoding="async" src={item.image} alt={item.name} className="size-14 object-contain" />
         </div>
 
         <div className="flex min-w-0 flex-col gap-3">
@@ -303,7 +299,7 @@ const SubmittedReviewCard = ({ review }: { review: SubmittedEntry }) => {
           to={productUrl}
           className="grid size-18 place-items-center rounded-xl border border-border bg-background transition-colors hover:border-primary/50"
         >
-          <img
+          <img loading="lazy" decoding="async"
             src={review.productId.images[0] || "/placeholder.png"}
             alt={review.productId.name}
             className="size-14 object-contain"

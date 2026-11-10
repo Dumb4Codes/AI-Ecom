@@ -20,7 +20,7 @@ export const getProductsSchema = z.object({
       "price-high", 
       "highest-rating"])
     .default("best-match"),
-  keyword: z.string().optional(),
+  keyword: z.string().trim().max(100).optional(),
   skip: z.coerce.number().int().min(0).optional(),
 });
 

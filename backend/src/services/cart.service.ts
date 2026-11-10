@@ -89,7 +89,7 @@ export const upsertCartService = async (
 
   const cart = await CartModel.findOneAndUpdate(query, update, {
     upsert: true,
-    new: true,
+    returnDocument: "after",
   })
     .populate({
       path: "items.productId",

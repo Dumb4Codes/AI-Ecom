@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/lib/errors";
 import {
   Accordion,
   AccordionContent,
@@ -16,7 +17,7 @@ import {
 import { useCart } from "@/hooks/use-cart";
 import { PUBLIC_ROUTES } from "@/routes/route";
 import { ArrowLeft, CreditCard, MapPin, PackageCheck, ShoppingCart } from "lucide-react";
-import { useMemo, useState, useEffect, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AddressSection from "./components/address-section";
 import OrderSummary from "./components/order-summary";
@@ -40,7 +41,7 @@ const CheckoutPage = () => {
   const {items, orderTotal, resetCart} = useCart((state) => state);
   const cartCount = useCart((state) => state.cartCount());
 
-  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [chosenAddressId, setSelectedAddressId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod | "">("");
   const [openPanel, setOpenPanel] = useState("address");
 
@@ -49,20 +50,16 @@ const CheckoutPage = () => {
     queryKey: ["addresses"],
     queryFn: getAddressesQueryFn,
   });
-  const addresses = addressData?.addresses || [];
+  const addresses = useMemo(() => addressData?.addresses ?? [], [addressData]);
+
+  // Default to the user's default (or first) address until they pick another.
+  const selectedAddressId =
+    chosenAddressId ||
+    addresses.find((a) => a.isDefault)?._id ||
+    addresses[0]?._id ||
+    "";
 
 
-  // Auto-select default address if available
-  useEffect(() => {
-    if (addresses.length > 0 && !selectedAddressId) {
-      const defaultAddress = addresses.find((a) => a.isDefault);
-      if (defaultAddress) {
-        setSelectedAddressId(defaultAddress._id);
-      } else {
-        setSelectedAddressId(addresses[0]._id);
-      }
-    }
-  }, [addresses, selectedAddressId]);
 
 
   const selectedAddress = useMemo(
@@ -78,8 +75,8 @@ const CheckoutPage = () => {
       setOpenPanel("payment");
       toast.success("Address saved successfully");
     },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to add address");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to add address"));
     },
   });
 
@@ -96,8 +93,8 @@ const CheckoutPage = () => {
         toast.success("Order placed successfully");
       }
     },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to place order");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to place order"));
     },
   });
 

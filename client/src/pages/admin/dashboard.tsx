@@ -195,7 +195,7 @@ export default function AdminDashboardPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  recentOrders.map((order:any) => (
+                  recentOrders.map((order) => (
                     <TableRow key={order._id} className="hover:bg-muted/30 text-[13px]!">
                       <TableCell className="px-6 py-2 font-medium">
                         #{order.orderNo}
