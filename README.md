@@ -6,6 +6,14 @@ A full-stack ecommerce platform with guest & authenticated carts, product catalo
 
 **Live demo:** https://ai-ecom-mocha.vercel.app (API on Render's free tier; the first request after a long idle can take up to a minute while it wakes up)
 
+**Demo admin login** (to explore the admin portal at `/admin`):
+
+| Email | Password |
+|---|---|
+| `demo-admin@ai-ecom.dev` | `xlXnGiaI1Mo6CpDs` |
+
+This is a shared demo account on a demo database with test data only. Please be gentle with it: orders and products you change are visible to everyone.
+
 | Home | Product page |
 |---|---|
 | ![Home page](docs/screenshots/home-desktop.webp) | ![Product page](docs/screenshots/product-detail-desktop.webp) |
