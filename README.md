@@ -4,6 +4,31 @@ A full-stack ecommerce platform with guest & authenticated carts, product catalo
 
 > Built on top of an open-source MERN ecommerce starter, extended and deployed independently.
 
+**Live demo:** https://ai-ecom-mocha.vercel.app (API on Render's free tier; the first request after a long idle can take up to a minute while it wakes up)
+
+| Home | Product page |
+|---|---|
+| ![Home page](docs/screenshots/home-desktop.webp) | ![Product page](docs/screenshots/product-detail-desktop.webp) |
+
+| Catalog and cart | Mobile |
+|---|---|
+| ![Catalog with cart drawer](docs/screenshots/cart-desktop.webp) | <img src="docs/screenshots/home-mobile.webp" alt="Mobile home page" width="260" /> |
+
+---
+
+## 🧠 Engineering highlights
+
+- **Idempotent payments.** The Stripe webhook uses atomic compare-and-set on `paymentStatus`, so a replayed event cannot double-decrement stock or flip a paid order to cancelled. Covered by tests.
+- **No overselling.** Orders re-check stock server-side and decrement with a guarded update, so stock never goes negative under concurrent checkouts.
+- **Server-side pricing.** Prices, tax and delivery fees are always computed on the server from the database, never trusted from the client.
+- **Hardened API.** Helmet, rate limiting (stricter on auth and AI routes), body size limits, escaped regex search, consistent 4xx errors for bad input, httpOnly cookies, and role-based admin guards.
+- **Tested.** Vitest + Supertest on an in-memory MongoDB (24 tests) plus client unit tests. CI runs typecheck, lint, tests and the production build on every push.
+- **Fast front end.** Route-level code splitting, lazy-loaded cart/auth overlays, WebP assets, self-hosted fonts and a stable layout. Lighthouse on the live site: **desktop 98**, mobile 60 (throttled), CLS 0.006.
+- **Typed end to end.** Strict TypeScript with zero `any` on the client and a typed API layer.
+- **Accessible and responsive.** Labelled controls, keyboard-friendly dialogs and layouts checked from 320px to 1440px.
+
+The full audit log, with before/after metrics, is in [`docs/AUDIT_CHANGELOG.md`](docs/AUDIT_CHANGELOG.md).
+
 ---
 
 ## ✨ Features
@@ -57,6 +82,8 @@ cp .env.example .env
 npm run seed:categories   # optional: seeds initial categories
 # optional: create/promote a demo admin so you can open the admin dashboard
 DEMO_ADMIN_EMAIL=admin@example.com DEMO_ADMIN_PASSWORD='choose-a-password' npm run seed:demo-admin
+# optional: add 12 sample products (safe to re-run; needs the categories and demo admin above)
+DEMO_ADMIN_EMAIL=admin@example.com npm run seed:demo-products
 npm run dev
 ```
 
